@@ -253,6 +253,87 @@ If you have existing JSON files in the root of the output directory, you can reo
 python reorganize_output.py
 ```
 
+## Daily Jeopardy Email
+
+Send a daily email with 3 random Jeopardy questions in a beautiful, interactive format!
+
+### Setup
+
+1. **Create your `.env` file** from the example:
+```bash
+cp env.example .env
+```
+
+2. **Configure Mailgun credentials** in `.env`:
+   - Sign up for a free Mailgun account at [mailgun.com](https://www.mailgun.com/)
+   - Get your API key and domain from the [Mailgun dashboard](https://app.mailgun.com/)
+   - Update the `.env` file with your credentials:
+
+```env
+MAILGUN_DOMAIN=your-mailgun-domain.mailgun.org
+MAILGUN_API_KEY=key-your-api-key-here
+FROM_EMAIL=jeopardy@your-domain.com
+TO_EMAIL=your-email@example.com
+```
+
+### Usage
+
+**Test without sending email (recommended first):**
+
+```bash
+python test_email_generation.py
+```
+
+This will generate a `test_email.html` file that you can open in your browser to preview the email.
+
+**Send the actual email:**
+
+```bash
+python daily_jeopardy_email.py
+```
+
+### Features
+
+- **Random Selection**: Picks 3 questions from 3 different games
+- **Beautiful Design**: Jeopardy-style board with blue background and gold accents
+- **Mobile-Friendly Reveal**: All questions shown first, then scroll down for answers (works perfectly on mobile and desktop!)
+- **Full Details**: Shows category, value, game ID, and air date
+- **Daily Double Detection**: Special badge for Daily Double clues
+- **Jeopardy Format**: Shows the clue first, answer separated below (remember, in Jeopardy the "answer" is given and contestants respond with the "question")
+
+### Email Preview
+
+The email will display:
+
+**Questions Section:**
+- A Jeopardy-styled header
+- 3 question cards with:
+  - Category name
+  - Dollar value
+  - The clue (answer in Jeopardy terms)
+  - Game metadata (game ID and air date)
+
+**Then a divider with space...**
+
+**Answers Section:**
+- All 3 answers clearly displayed at the bottom
+- Each answer card shows which question it corresponds to
+- Easy to scroll up and check your responses
+
+**How it works:**
+- Try to answer all questions mentally as you scroll through them
+- Scroll down past a spacer to see all the answers
+- Works perfectly on mobile, desktop, and all email clients! 📱💻
+
+### Automation
+
+You can set this up to run daily using cron (Linux/Mac) or Task Scheduler (Windows):
+
+**Example cron job (runs daily at 9 AM):**
+```bash
+0 9 * * * cd /path/to/jeopardy-scrape && /path/to/venv/bin/python daily_jeopardy_email.py
+```
+
 ## Notes
 
 - The scraper respects the J-Archive website structure as of October 2025
