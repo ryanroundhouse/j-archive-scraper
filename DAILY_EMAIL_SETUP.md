@@ -66,16 +66,45 @@ Each daily email includes:
 
 ## Automation
 
-To receive questions daily, set up a cron job (Mac/Linux) or Task Scheduler (Windows).
+A convenient shell script is provided to make automation easy.
 
-**Example cron job (9 AM daily):**
+### Using the Shell Script
 
+**Test it first:**
+```bash
+./send_daily_jeopardy.sh
+```
+
+This script automatically:
+- Changes to the correct directory
+- Activates the virtual environment
+- Runs the email script
+- Cleans up afterwards
+
+### Set Up Daily Cron Job
+
+**Basic (runs at 9 AM daily):**
 ```bash
 # Edit your crontab
 crontab -e
 
-# Add this line (adjust paths):
-0 9 * * * cd /Users/rg/git/jeopardy-scrape && /Users/rg/git/jeopardy-scrape/venv/bin/python daily_jeopardy_email.py
+# Add this line:
+0 9 * * * /Users/rg/git/jeopardy-scrape/send_daily_jeopardy.sh
+```
+
+**With logging (recommended):**
+```bash
+# Logs all output to a file
+0 9 * * * /Users/rg/git/jeopardy-scrape/send_daily_jeopardy.sh >> /Users/rg/git/jeopardy-scrape/daily_email.log 2>&1
+```
+
+### Cron Schedule Examples
+
+```bash
+0 9 * * *     # 9:00 AM daily
+0 7 * * 1-5   # 7:00 AM weekdays only
+0 10 * * 0    # 10:00 AM Sundays only
+0 */6 * * *   # Every 6 hours
 ```
 
 ## Troubleshooting
@@ -100,9 +129,11 @@ crontab -e
 
 - `daily_jeopardy_email.py` - Main email script
 - `test_email_generation.py` - Test script (no email sent)
+- `send_daily_jeopardy.sh` - Shell script for automation (executable)
 - `env.example` - Template for your .env file
 - `.env` - Your actual credentials (not tracked by git)
 - `test_email.html` - Preview of the generated email (not tracked by git)
+- `daily_email.log` - Optional log file for cron output (not tracked by git)
 
 ## Dependencies
 

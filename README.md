@@ -327,11 +327,35 @@ The email will display:
 
 ### Automation
 
-You can set this up to run daily using cron (Linux/Mac) or Task Scheduler (Windows):
+A shell script is provided to make automation easier:
 
-**Example cron job (runs daily at 9 AM):**
 ```bash
-0 9 * * * cd /path/to/jeopardy-scrape && /path/to/venv/bin/python daily_jeopardy_email.py
+./send_daily_jeopardy.sh
+```
+
+This script automatically activates the virtual environment and runs the email sender.
+
+**Set up a daily cron job (runs at 9 AM every day):**
+
+```bash
+# Edit your crontab
+crontab -e
+
+# Add this line (adjust path to your installation):
+0 9 * * * /Users/rg/git/jeopardy-scrape/send_daily_jeopardy.sh
+
+# Or to also log the output:
+0 9 * * * /Users/rg/git/jeopardy-scrape/send_daily_jeopardy.sh >> /Users/rg/git/jeopardy-scrape/daily_email.log 2>&1
+```
+
+**Manual run:**
+```bash
+# Using the shell script (recommended)
+./send_daily_jeopardy.sh
+
+# Or directly with Python
+source venv/bin/activate
+python daily_jeopardy_email.py
 ```
 
 ## Notes

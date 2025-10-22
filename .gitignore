@@ -48,4 +48,5 @@ Thumbs.db
 # Email script
 .env
 test_email.html
+daily_email.log
 
