@@ -57,11 +57,23 @@ def pick_random_questions(num_questions=3):
     if len(game_files) < num_questions:
         raise ValueError(f"Not enough game files. Found {len(game_files)}, need {num_questions}")
     
-    # Randomly select different games
-    selected_games = random.sample(game_files, num_questions)
-    
     questions = []
-    for game_file in selected_games:
+    used_game_files = set()
+    max_attempts = len(game_files)  # Try all games if needed
+    attempts = 0
+    
+    while len(questions) < num_questions and attempts < max_attempts:
+        # Get remaining game files that haven't been tried yet
+        available_games = [gf for gf in game_files if gf not in used_game_files]
+        
+        if not available_games:
+            break  # No more games to try
+        
+        # Pick a random game from available games
+        game_file = random.choice(available_games)
+        used_game_files.add(game_file)
+        attempts += 1
+        
         try:
             game_data = load_game_data(game_file)
             clue = get_random_clue(game_data)
@@ -77,9 +89,14 @@ def pick_random_questions(num_questions=3):
                     'round': clue.get('round'),
                     'daily_double': clue.get('daily_double', False)
                 })
+            else:
+                print(f"Skipping {game_file}: No valid clues found")
         except Exception as e:
             print(f"Error processing {game_file}: {e}")
             continue
+    
+    if len(questions) < num_questions:
+        raise ValueError(f"Could not find {num_questions} valid questions. Only found {len(questions)} after checking {attempts} games.")
     
     return questions
 
